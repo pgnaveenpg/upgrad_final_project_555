@@ -1,0 +1,30 @@
+---
+- hosts: jenkinsserver
+  become: true
+  tasks:
+  - name: jenkins apt repository key is installed
+    apt_key: url=https://pkg.jenkins.io/debian-stable/jenkins.io.key state=present
+    become: yes
+
+  - name: ensure the repository is configured
+    apt_repository: repo='deb https://pkg.jenkins.io/debian-stable binary/' state=present
+    become: yes
+
+  - name: java is installation
+    apt: name=openjdk-11-jdk
+    become: yes
+
+  - name: ca-certificates
+    apt: name=ca-certificates
+    become: yes
+
+  - name: apt-get update
+    apt: update_cache=yes
+    become: yes
+
+  - name: ensure jenkins is installed
+    apt: name=jenkins
+    become: yes
+
+  - name: Ensure jenkins is running
+    service: name=jenkins state=started
